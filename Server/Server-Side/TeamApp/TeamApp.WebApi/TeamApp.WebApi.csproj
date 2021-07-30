@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Authors>Tien Dung Nguyen</Authors>
+	</PropertyGroup>
+
+	<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+
+		<ItemGroup>
+
+			<DocFile Include="bin\**\**\$(TargetName).xml" />
+
+		</ItemGroup>
+
+		<Copy SourceFiles="@(DocFile)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />
+
+	</Target>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<PublishDocumentationFile>true</PublishDocumentationFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Models\**" />
+		<Compile Remove="wwwroot\**" />
+		<Content Remove="Models\**" />
+		<Content Remove="wwwroot\**" />
+		<EmbeddedResource Remove="Models\**" />
+		<EmbeddedResource Remove="wwwroot\**" />
+		<None Remove="Models\**" />
+		<None Remove="wwwroot\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Controllers\GroupChatUserController.cs" />
+	  <Compile Remove="Controllers\TagController.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="EPPlus" Version="5.6.1" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.7.24" />
+		<PackageReference Include="Hangfire.Core" Version="1.7.24" />
+		<PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
+		<PackageReference Include="Serilog.Enrichers.Process" Version="2.0.1" />
+		<PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.5.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="9.1.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\TeamApp.Application\TeamApp.Application.csproj" />
+		<ProjectReference Include="..\TeamApp.Infrastructure.Persistence\TeamApp.Infrastructure.Persistence.csproj" />
+		<ProjectReference Include="..\TeamApp.Infrastructure.Shared\TeamApp.Infrastructure.Shared.csproj" />
+	</ItemGroup>
+
+</Project>
