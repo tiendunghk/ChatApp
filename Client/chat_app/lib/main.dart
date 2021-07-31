@@ -1,4 +1,5 @@
 import 'package:chat_app/screens/list_chat_screen/list_chat_screen.dart';
+import 'package:chat_app/screens/login/login.dart';
 import 'package:chat_app/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: darkThemeData(context),
-      home: ListChatScreen(),
+      routes: {
+        "/": (_) => Login(),
+        "/list-chat": (_) => ListChatScreen(),
+      },
     );
   }
 }
