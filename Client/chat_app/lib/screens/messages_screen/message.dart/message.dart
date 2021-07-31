@@ -13,13 +13,16 @@ class Message extends StatelessWidget {
           message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Container(
-            margin: EdgeInsets.only(top: kDefaultPadding),
+            margin: EdgeInsets.only(top: defaultPadding),
             padding: EdgeInsets.symmetric(
-              horizontal: kDefaultPadding * 0.75,
-              vertical: kDefaultPadding / 2,
+              horizontal: defaultPadding * 0.75,
+              vertical: defaultPadding / 2,
             ),
             decoration: BoxDecoration(
-                color: kPrimaryColor, borderRadius: BorderRadius.circular(20)),
+                color: message.isSender
+                    ? Color(0xFF2B5278)
+                    : Color(0xFF2B5278).withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20)),
             child: Text(message.text))
       ],
     );

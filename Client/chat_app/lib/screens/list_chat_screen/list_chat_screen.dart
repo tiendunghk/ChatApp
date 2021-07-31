@@ -1,4 +1,3 @@
-import 'package:chat_app/constants.dart';
 import 'package:chat_app/screens/list_chat_screen/list_chat_body.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class ListChatScreen extends StatelessWidget {
       body: ListChatBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.chat_bubble, color: Colors.white),
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Colors.blueAccent,
         onPressed: () {},
         tooltip: "New Chat",
       ),
