@@ -59,79 +59,10 @@ namespace TeamApp.WebApi.Controllers.Test
                 });
         }
 
-        [HttpGet("convert-date")]
-        public IActionResult ConvertDate(long timestamp)
-        {
-            return Ok(new
-            {
-                DateTime = Application.Utils.Extensions.UnixTimeStampToDateTime(timestamp),
-            });
-        }
         [HttpGet("test-time")]
         public IActionResult GetTime()
         {
             return Ok(DateTime.UtcNow);
-        }
-
-        [HttpGet("random")]
-        public async Task<IActionResult> Random()
-        {
-            var res = await _dbContext.Message.FindAsync("2dc73c78-c510-4387-91e2-3725ffb3178c");
-            return Ok(
-                new ApiResponse<DateTime?>
-                {
-                    Data = res.MessageCreatedAt.FormatTime(),
-                    Succeeded = true,
-                }
-                );
-        }
-        [HttpGet("test-query")]
-        public async Task<IActionResult> GetQuery()
-        {
-            /*HttpContext.Response.Cookies.Append("test", "bánh quy", new Microsoft.AspNetCore.Http.CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddMinutes(2)
-            });*/
-            HttpContext.Request.Cookies.TryGetValue("test", out string z);
-            return Ok("abc query: " + z);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("decrypt")]
-        public IActionResult Decrypt(string encry, bool isDecode = false)
-        {
-            if (!isDecode)
-                encry = HttpUtility.UrlDecode(encry);
-            return Ok(StringHelper.DecryptString(encry));
-        }
-
-        [HttpGet("cookie-chrome")]
-        public IActionResult Cookie(bool check = false)
-        {
-            var value = "value";
-            if (check)
-                value = "CfDJ8Ow0LkUrqFdFuyvzQuWx8xMeVTPT_Qmwf40WdCw4SOOYx7jV_KbK6lnAqIbsguLDypCcOOa-2BbPFJpZhVIvDCUFoIpkE3M-u1oFB6bGx8ZqdKLgdd0WTRRSUyXtd0kCRc3UwCh08bZ1YgUObrSKO64MKJY4ntq-XbgJ7HpdBTLmP3ifdDABrMvazMYUCBocZ5-55wMXkSisvwSva6fziluLphg1f6J7GRx_XVVsiVYVihqB_BR6Ynhl4U_qtW6v6yx8oACAAjW7uiM4xzo3z_2rPiU3Scp4bPV9wqTaEGh8z6Z05OSir8ZUWaP3N5RjO-3xRATydslEGPTO6Cq3Yq5gJOGQ3_2UWRwCHldIEoF6_Y0HNxDTfux6XTUyuRdHUQPVYKuQzWy7aCPchwaRNn0qVh5rEYZJBSt8u2unqRIWC9qwrb6kK_6ql9NSyHd72tkZbRPeWNF1rnmWMhal3mM8PUx5-qbzrFgbdpoxY7E0BGTdYMS7UJoFofyTgR0yAfwL-8SdsH8PZ7TyfWiRRQmH4yagYmOOE5uv3QqSFwPCD5F8cVISRkvf8Ym5t64GtQmxXmzogcfVkesuVmYNGIvw-rpK_LLVP1Vllw4MeNAl__lIwBIdSJUyTU03I19ZeQfVkesuVmYNGIvw-rpK_LLVP1Vllw4MeNAl__lIwBIdSJUyTU03I19ZeQ";
-
-            HttpContext.Response.Cookies.Append(Guid.NewGuid().ToString(), value,
-                    new CookieOptions { Secure = true, HttpOnly = false, SameSite = SameSiteMode.None, Expires = DateTime.Now.AddDays(30), });
-
-            return Ok("niceeeee");
-        }
-
-        [HttpGet("getmes")]
-        public async Task<IActionResult> GetMes()
-        {
-            var mes = await _dbContext.Message.FirstOrDefaultAsync();
-            var a = DateTimeFormatInfo.CurrentInfo.Calendar;
-            var zzzzzz = DateTime.UtcNow.Date;
-            var time = ((DateTime)mes.MessageCreatedAt).ToLocalTime();
-            return Ok(
-                new ApiResponse<object>
-                {
-                    Succeeded = true,
-                    Data = mes,
-                }
-            );
         }
 
         [HttpPost("upload-file")]
@@ -151,42 +82,6 @@ namespace TeamApp.WebApi.Controllers.Test
                 }
             }
             return Ok(file.FileName);
-        }
-
-
-        [HttpGet("listdoublestring")]
-        public IActionResult RandomText(int number)
-        {
-            var rd = new Random();
-            List<int> lengths = new List<int> { 6, 7, 8, 9, 10 };
-            var results = new List<object>();
-            for (int i = 0; i < number; i++)
-            {
-                var a = RadomString.RandomString(lengths[rd.Next(lengths.Count)]);
-                var b = RadomString.RandomString(lengths[rd.Next(lengths.Count)]);
-
-                var check = string.Compare(a, b) < 0;
-                results.Add(new
-                {
-                    a = check ? a : b,
-                    b = check ? b : a,
-                });
-            }
-
-            var obj = new
-            {
-                Counts = number,
-                Data = results,
-            };
-
-            return Content(JsonConvert.SerializeObject(obj), "application/json");
-
-        }
-
-        public class RequestComplex
-        {
-            public IFormFile File { get; set; }
-            public string Datas { get; set; }
         }
     }
 }

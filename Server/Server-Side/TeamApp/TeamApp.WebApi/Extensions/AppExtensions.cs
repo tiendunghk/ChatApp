@@ -14,11 +14,12 @@ namespace TeamApp.WebApi.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TeamApp.WebApi");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat.WebApi");
             });
         }
         public static void UseErrorHandlingMiddleware(this IApplicationBuilder app)
         {
+            app.UseMiddleware<TokenMiddleware>();
             app.UseMiddleware<ErrorHandlerMiddleware>();
         }
     }

@@ -13,6 +13,5 @@ namespace TeamApp.Infrastructure.Persistence.Hubs.Chat
         public string UserAvatar { get; set; }
         public string Message { get; set; }
         public long TimeSend { get; set; }
-        public string MessageType { get; set; }
     }
 }

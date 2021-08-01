@@ -22,18 +22,13 @@ namespace TeamApp.WebApi.Controllers
             _repo = repo;
         }
 
-        /// <summary>
-        /// Get group chat by user id API
-        /// </summary>
-        /// <param name="search"></param>
-        /// <returns></returns>
-        [HttpGet("byuserid")]
-        [ProducesResponseType(typeof(ApiResponse<CustomListGroupChatResponse>), 200)]
-        public async Task<IActionResult> GetAllByUserId([FromQuery] GroupChatSearch search)
-        {
-            var res = await _repo.GetAllByUserId(search);
 
-            var outPut = new ApiResponse<CustomListGroupChatResponse>
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetAllByUserId(string userId)
+        {
+            var res = await _repo.GetAllByUserId(userId);
+
+            var outPut = new ApiResponse<List<GroupChatResponse>>
             {
                 Data = res,
                 Succeeded = true,
@@ -62,7 +57,7 @@ namespace TeamApp.WebApi.Controllers
 
             return Ok(outPut);
         }
-  
+
 
         /// <summary>
         /// Check exists chat 1 vs 1 API

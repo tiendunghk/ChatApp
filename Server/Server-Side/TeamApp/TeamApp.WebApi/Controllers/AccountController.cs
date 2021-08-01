@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -24,7 +22,7 @@ namespace TeamApp.WebApi.Controllers
 {
     [Route("api/account")]
     [ApiController]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -64,7 +62,7 @@ namespace TeamApp.WebApi.Controllers
         /// Check login API
         /// </summary>
         /// <returns></returns>
-        [HttpGet("is-login")]
+        /*[HttpGet("is-login")]
         [ProducesResponseType(typeof(ApiResponse<string>), 200)]
         public async Task<IActionResult> IsLogin()
         {
@@ -75,6 +73,6 @@ namespace TeamApp.WebApi.Controllers
                 throw new ApiException("Đã logout");
 
             return Ok(await _accountService.IsLogin(token, refreshtoken));
-        }
+        }*/
     }
 }

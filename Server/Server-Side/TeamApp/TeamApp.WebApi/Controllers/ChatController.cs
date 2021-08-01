@@ -43,36 +43,35 @@ namespace TeamApp.WebApi.Controllers.Test
             //get user of group => get list connections by user
             //chuyển tin nhắn cho các client
 
-            var user = await (from gru in _dbContext.GroupChatUser.AsNoTracking()
-                              where gru.GroupChatUserUserId == message.UserId && gru.GroupChatUserGroupChatId == message.GroupId
-                              select gru).FirstOrDefaultAsync();
+            var grcUser = await (from gru in _dbContext.GroupChatUser.AsNoTracking()
+                                 where gru.GroupChatUserUserId == message.UserId && gru.GroupChatUserGroupChatId == message.GroupId
+                                 select gru).FirstOrDefaultAsync();
 
-            if (user == null)
+            if (grcUser == null)
                 throw new KeyNotFoundException("User not in this group chat");
 
-            var connections = from gru in _dbContext.GroupChatUser.AsNoTracking()
-                              join d in _dbContext.UserConnection.AsNoTracking() on gru.GroupChatUserUserId equals d.UserId
-                              where gru.GroupChatUserGroupChatId == message.GroupId
-                              select d.ConnectionId;
+            var user = await _dbContext.User.FindAsync(message.UserId);
 
-            var query = await connections.AsNoTracking().Distinct().ToListAsync();
-            var clients = new ReadOnlyCollection<string>(query);
+            message.UserName = user.FullName;
+            message.UserAvatar = string.IsNullOrEmpty(user.ImageUrl) ? $"https://ui-avatars.com/api/?&name={user.FullName}&background=random" : user.ImageUrl;
 
+            var connections = await (from gru in _dbContext.GroupChatUser.AsNoTracking()
+                                     join d in _dbContext.UserConnection.AsNoTracking() on gru.GroupChatUserUserId equals d.UserId
+                                     where gru.GroupChatUserGroupChatId == message.GroupId
+                                     select d.ConnectionId).Distinct().ToListAsync();
 
-            await _chatHub.Clients.Clients(clients).NhanMessage(message);
+            await _chatHub.Clients.Clients(connections).NhanMessage(message);
 
 
             var date = Application.Utils.Extensions.UnixTimeStampToDateTime(message.TimeSend);
 
-            await _messageRepository.AddMessage(new MessageRequest
+            /*await _messageRepository.AddMessage(new MessageRequest
             {
                 MessageUserId = message.UserId,
                 MessageGroupChatId = message.GroupId,
                 MessageContent = message.Message,
                 MessageCreatedAt = date,
-            });
-
-            //await _chatHub.Clients.Groups(groupId).NhanMessage(message);
+            });*/
         }
     }
 }

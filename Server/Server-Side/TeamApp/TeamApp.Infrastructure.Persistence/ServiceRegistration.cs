@@ -39,7 +39,7 @@ namespace TeamApp.Infrastructure.Persistence
             services.AddTransient<IGroupChatRepository, GroupChatRepository>();
             services.AddTransient<IGroupChatUserRepository, GroupChatUserRepository>();
             services.AddTransient<IMessageRepository, MessageRepository>();
-          
+
             #endregion
             ConfigAuthService(services, configuration);
         }
@@ -61,12 +61,7 @@ namespace TeamApp.Infrastructure.Persistence
             services.AddTransient<IAccountService, AccountService>();
             #endregion
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
-            services.Configure<MyAppSettings>(configuration.GetSection("MyApp"));
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminPolicy",
-                    policy => policy.Requirements.Add(new AdminCheckRequirement { }));
-            });
+           
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,22 +86,18 @@ namespace TeamApp.Infrastructure.Persistence
                     {
                         OnAuthenticationFailed = c =>
                         {
-                            c.NoResult();
+                            //c.NoResult();
                             if (c.Exception.GetType() == typeof(SecurityTokenExpiredException))
                             {
-                                c.Response.Cookies.Append("TokenExpired", "true", new CookieOptions
-                                {
-                                    Domain = configuration["MyApp:Url"],
-                                    Expires = DateTime.UtcNow.AddMinutes(5),
-                                    Secure = true,
-                                    HttpOnly = false,
-                                    SameSite = SameSiteMode.None,
-                                });
+                                c.Response.StatusCode = 401;
+                                c.Response.ContentType = "application/json";
+                                var responseModel = new ApiResponse<string>() { Succeeded = false, Message = "Token Exprired" };
+                                return c.Response.WriteAsync(JsonConvert.SerializeObject(responseModel));
                             }
                             c.Response.StatusCode = 401;
-                            c.Response.ContentType = "text/plain";
-                            var responseModel = new ApiResponse<string>() { Succeeded = false, Message = c.Exception.ToString(), };
-                            return c.Response.WriteAsync(JsonConvert.SerializeObject(responseModel));
+                            c.Response.ContentType = "application/json";
+                            var responseModel2 = new ApiResponse<string>() { Succeeded = false, Message = c.Exception.ToString(), };
+                            return c.Response.WriteAsync(JsonConvert.SerializeObject(responseModel2));
                         },
 
                         OnForbidden = context =>

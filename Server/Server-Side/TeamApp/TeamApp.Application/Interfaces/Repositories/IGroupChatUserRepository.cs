@@ -8,7 +8,6 @@ namespace TeamApp.Application.Interfaces.Repositories
 {
     public interface IGroupChatUserRepository
     {
-        Task<List<GroupChatUserResponse>> GetByUserId(string userId);
         Task<string> AddGroupChatUser(GroupChatUserRequest grChatUserReq);
     }
 }

@@ -8,9 +8,9 @@ namespace TeamApp.Application.Interfaces.Repositories
 {
     public interface IGroupChatRepository
     {
-        Task<CustomListGroupChatResponse> GetAllByUserId(GroupChatSearch search);
+        Task<List<GroupChatResponse>> GetAllByUserId(string userId);
         Task<string> AddGroupChat(GroupChatRequest grChatReq);  
-        Task<object> CheckDoubleGroupChatExists(CheckDoubleGroupChatExists chatExists);
+        Task<bool> CheckDoubleGroupChatExists(CheckDoubleGroupChatExists chatExists);
 
     }
 }

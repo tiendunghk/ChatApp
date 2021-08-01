@@ -33,21 +33,5 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
 
             return entity.GroupChatUserId;
         }
-
-        
-
-        public async Task<List<GroupChatUserResponse>> GetByUserId(string userId)
-        {
-            var query = from grc in _dbContext.GroupChatUser
-                        where grc.GroupChatUserUserId == userId
-                        select grc;
-
-            return await query.Select(x => new GroupChatUserResponse
-            {
-                GroupChatUserId = x.GroupChatUserId,
-                GroupChatUserUserId = x.GroupChatUserUserId,
-                GroupChatUserGroupChatId = x.GroupChatUserGroupChatId,
-            }).ToListAsync();
-        }
     }
 }

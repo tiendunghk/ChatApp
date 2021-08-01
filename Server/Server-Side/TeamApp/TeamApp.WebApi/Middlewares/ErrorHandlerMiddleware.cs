@@ -26,6 +26,8 @@ namespace TeamApp.WebApi.Middlewares
             }
             catch (Exception error)
             {
+                if (error.Message.Contains("StatusCode cannot be set because the response has already started."))
+                    return;
                 var response = context.Response;
                 response.ContentType = "application/json";
                 var responseModel = new ApiResponse<string>() { Succeeded = false, Message = error?.Message };
