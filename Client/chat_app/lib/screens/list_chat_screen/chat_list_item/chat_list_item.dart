@@ -1,10 +1,12 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/chat.dart';
+import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/screens/messages_screen/messages_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ChatListItem extends StatelessWidget {
-  final Chat chat;
+  final GroupChatModel chat;
   const ChatListItem({Key? key, required this.chat}) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class ChatListItem extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage(chat.image),
+              backgroundImage: NetworkImage(chat.groupAvatar),
             ),
             Expanded(
                 child: Padding(
@@ -29,26 +31,29 @@ class ChatListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    chat.name,
+                    chat.groupChatName,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(
                     height: 8,
                   ),
-                  Opacity(
-                    opacity: 0.64,
-                    child: Text(
-                      chat.lastMessage,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )
+                  chat.lastestMes != null
+                      ? Opacity(
+                          opacity: 0.64,
+                          child: Text(
+                            chat.lastestMes!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      : Container()
                 ],
               ),
             )),
             Opacity(
               opacity: 0.64,
-              child: Text(chat.time),
+              child: Text(
+                  timeago.format(chat.groupChatUpdatedAt, locale: 'en_short')),
             )
           ],
         ),

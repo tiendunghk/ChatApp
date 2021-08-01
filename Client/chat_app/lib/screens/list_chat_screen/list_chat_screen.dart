@@ -1,6 +1,8 @@
+import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/screens/list_chat_screen/list_chat_body.dart';
 import 'package:chat_app/signalr/chatHub.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListChatScreen extends StatefulWidget {
   static const routeName = "/chat-list";
@@ -18,8 +20,8 @@ class _ListChatScreenState extends State<ListChatScreen> {
     connectSignalR();
   }
 
-  void connectSignalR() {
-    ChatHub().connectHub();
+  void connectSignalR() async {
+    //ChatHub().connectHub();
   }
 
   @override
@@ -42,9 +44,12 @@ class _ListChatScreenState extends State<ListChatScreen> {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/');
-          },
+            onPressed: () {
+              Navigator.of(context).pushNamed('/');
+            },
+            icon: Icon(Icons.logout)),
+        IconButton(
+          onPressed: () {},
           icon: Icon(Icons.search),
         )
       ],

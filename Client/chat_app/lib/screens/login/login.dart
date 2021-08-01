@@ -97,6 +97,7 @@ class _LoginState extends State<Login> {
       var userResponse = UserResponse.fromJson(jsonResponse.data);
       print(userResponse.id);
       SharedPreferences sharePrf = await SharedPreferences.getInstance();
+      sharePrf.setString('uid', userResponse.id);
       sharePrf.setString("access_token", userResponse.jwToken);
 
       Navigator.of(context).pushReplacementNamed(ListChatScreen.routeName);
