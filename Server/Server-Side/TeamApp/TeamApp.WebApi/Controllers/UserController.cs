@@ -20,35 +20,11 @@ namespace TeamApp.WebApi.Controllers
         }
 
 
- 
-
-        /// <summary>
-        /// Search all users in all group user joined API
-        /// </summary>
-        /// <param name="searchModel"></param>
-        /// <returns></returns>
-        [HttpGet("search-user")]
+        [HttpGet("search")]
         [ProducesDefaultResponseType(typeof(ApiResponse<List<UserResponse>>))]
         public async Task<IActionResult> SearchUser([FromQuery] UserSearchModel searchModel)
         {
-            var outPut = await _repo.SearchUser(searchModel.UserId, searchModel.Keyword, searchModel.IsEmail);
-            return Ok(new ApiResponse<List<UserResponse>>
-            {
-                Data = outPut,
-                Succeeded = outPut != null
-            });
-        }
-
-        /// <summary>
-        /// Search users to add to exists chat API
-        /// </summary>
-        /// <param name="searchModel"></param>
-        /// <returns></returns>
-        [HttpGet("search-user-add-chat")]
-        [ProducesDefaultResponseType(typeof(ApiResponse<List<UserResponse>>))]
-        public async Task<IActionResult> SearchUserExistsAddChat([FromQuery] UserExistsChatAddModel searchModel)
-        {
-            var outPut = await _repo.SearchUserAddToExistsChat(searchModel.UserId, searchModel.GroupChatId, searchModel.Keyword, searchModel.IsEmail);
+            var outPut = await _repo.SearchUser(searchModel.UserId, searchModel.Keyword);
             return Ok(new ApiResponse<List<UserResponse>>
             {
                 Data = outPut,

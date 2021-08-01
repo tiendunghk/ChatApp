@@ -8,6 +8,5 @@ namespace TeamApp.Application.DTOs.User
     {
         public string UserId { get; set; }
         public string Keyword { get; set; }
-        public bool IsEmail { get; set; } = false;
     }
 }

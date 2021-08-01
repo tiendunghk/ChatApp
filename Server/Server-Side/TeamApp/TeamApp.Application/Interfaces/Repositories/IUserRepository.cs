@@ -6,7 +6,6 @@ namespace TeamApp.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {       
-        Task<List<UserResponse>> SearchUser(string userId, string keyWord, bool isEmail);
-        Task<List<UserResponse>> SearchUserAddToExistsChat(string userId, string teamId, string keyWord, bool isEmail);
+        Task<List<UserResponse>> SearchUser(string userId, string keyWord);
     }
 }

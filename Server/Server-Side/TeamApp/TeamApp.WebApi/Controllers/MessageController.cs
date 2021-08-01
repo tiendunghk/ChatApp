@@ -34,7 +34,6 @@ namespace TeamApp.WebApi.Controllers
         [ProducesDefaultResponseType(typeof(ApiResponse<PagedResponse<MessageResponse>>))]
         public async Task<IActionResult> GetPaging([FromQuery] MessageRequestParameter parameter)
         {
-            parameter.UserId = _authenticatedUserService.UserId;
             var res = await _repo.GetPaging(parameter);
 
             var outPut = new ApiResponse<PagedResponse<MessageResponse>>
