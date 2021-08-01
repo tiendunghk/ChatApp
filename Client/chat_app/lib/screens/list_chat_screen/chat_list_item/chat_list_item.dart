@@ -13,8 +13,7 @@ class ChatListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => MessagesScreen()));
+        Navigator.of(context).pushNamed(MessagesScreen.routeName,arguments: chat);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
