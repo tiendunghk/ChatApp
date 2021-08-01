@@ -26,7 +26,7 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
         {
             var entity = new Message
             {
-                MessageId = Guid.NewGuid().ToString(),
+                MessageId = msgReq.MessengerId,
                 MessageUserId = msgReq.MessageUserId,
                 MessageGroupChatId = msgReq.MessageGroupChatId,
                 MessageContent = msgReq.MessageContent,
@@ -69,6 +69,7 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
                 MessageCreatedAt = x.m.MessageCreatedAt.FormatTime(),
                 MessengerUserAvatar = string.IsNullOrEmpty(x.u.ImageUrl) ? $"https://ui-avatars.com/api/?name={x.u.FullName}" : x.u.ImageUrl,
                 MessengerUserName = x.u.FullName,
+                IsSender = x.m.MessageUserId == parameter.UserId,
             }).ToListAsync();
 
             items.Reverse();

@@ -13,5 +13,6 @@ namespace TeamApp.Application.DTOs.Message
         public DateTime? MessageCreatedAt { get; set; }
         public string MessengerUserAvatar { get; set; }
         public string MessengerUserName { get; set; }
+        public bool? IsSender { get; set; }
     }
 }

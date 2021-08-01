@@ -52,8 +52,10 @@ namespace TeamApp.WebApi.Controllers.Test
 
             var user = await _dbContext.User.FindAsync(message.UserId);
 
+            message.Id = Guid.NewGuid().ToString();
             message.UserName = user.FullName;
             message.UserAvatar = string.IsNullOrEmpty(user.ImageUrl) ? $"https://ui-avatars.com/api/?&name={user.FullName}&background=random" : user.ImageUrl;
+            message.TimeSend = DateTime.UtcNow;
 
             var connections = await (from gru in _dbContext.GroupChatUser.AsNoTracking()
                                      join d in _dbContext.UserConnection.AsNoTracking() on gru.GroupChatUserUserId equals d.UserId
@@ -62,16 +64,14 @@ namespace TeamApp.WebApi.Controllers.Test
 
             await _chatHub.Clients.Clients(connections).NhanMessage(message);
 
-
-            var date = Application.Utils.Extensions.UnixTimeStampToDateTime(message.TimeSend);
-
-            /*await _messageRepository.AddMessage(new MessageRequest
+            await _messageRepository.AddMessage(new MessageRequest
             {
+                MessengerId = message.Id,
                 MessageUserId = message.UserId,
                 MessageGroupChatId = message.GroupId,
                 MessageContent = message.Message,
-                MessageCreatedAt = date,
-            });*/
+                MessageCreatedAt = message.TimeSend,
+            });
         }
     }
 }
