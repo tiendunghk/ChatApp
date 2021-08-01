@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: darkThemeData(context),
       routes: {
         "/": (_) => Login(),
-        "/list-chat": (_) => ListChatScreen(),
+        ListChatScreen.routeName: (_) => ListChatScreen(),
       },
     );
   }

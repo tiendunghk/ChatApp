@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:chat_app/models/user.dart';
+import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/models/user_response.dart';
-import 'package:chat_app/repository/api_helper.dart';
-import 'package:chat_app/repository/my_api_helper.dart';
-import 'package:dio/dio.dart';
+import 'package:chat_app/screens/list_chat_screen/list_chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -81,43 +79,27 @@ class _LoginState extends State<Login> {
     }
 
     print('call api');
-    var api = MyApiHelper();
-    var res = await api.postHTTP('/account/authenticate',
-        UserRequest(email: email, fullName: name).toJson());
 
-    if (res != null) {
-      var userResponse = UserResponse.fromJson(res.data['data']);
-      SharedPreferences shared = await SharedPreferences.getInstance();
-      shared.setString('access_token', userResponse.jwToken);
+    http.Response response = await http.post(
+        Uri.parse('http://10.0.3.2:9999/api/account/authenticate'),
+        body: json.encode({
+          'email': email,
+          'fullName': name,
+        }),
+        headers: {'Content-Type': 'application/json'},
+        encoding: Encoding.getByName("utf-8"));
+
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
+
+      var userResponse = UserResponse.fromJson(jsonResponse.data);
       print(userResponse.id);
-    }
-    //var res1=await Dio().get('https://jsonplaceholder.typicode.com/todos/1');
+      SharedPreferences sharePrf = await SharedPreferences.getInstance();
+      sharePrf.setString("access_token", userResponse.jwToken);
 
-    /*var url = Uri.parse('http://10.0.3.2:9999/api/account/authenticate');
-
-    http.Response response = await http.post(url,
-        body: json.encode({'email': email, 'fullName': name}),
-        headers: {"Content-Type": "application/json"});
-
-    print('zzzzzzzz :  ${response.body}');
-    print('zzzzzzzz :  ${response.statusCode}');
-    print('zzzzzzzz :  ${response.reasonPhrase}');*/
-  }
-
-  void _testJWT() async {
-    try {
-      //var res = await MyApiHelper().getHTTP('/test');
-      /*final token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZjZmNGFjZS1iZDgyLTQ2ODYtYjRhYS1mYjNmZjk5YWJlODgiLCJ1aWQiOiI2YzI0MzZkNy0yOTM1LTRhMWUtYjdhNi1iZWM0MTUwN2M1MWMiLCJleHAiOjE2ODc3NTExMDksImlzcyI6IkNvcmVJZGVudGl0eSIsImF1ZCI6IkNvcmVJZGVudGl0eVVzZXIifQ.XaFFkR-CcbpfCtm6PkGwK-foDml-vS-79EdtvwCXS6w";
-
-      var res = await Dio().get('http://10.0.3.2:9999/api/test',
-          options: Options(headers: {"Authorization": "Bearer $token"}));
-      print('res $res');*/
-
-      var res = await MyApiHelper().getHTTP('/test');
-      print('zzzzzzzz   $res');
-    } on DioError catch (err) {
-      print('loix $err');
+      Navigator.of(context).pushReplacementNamed(ListChatScreen.routeName);
     }
   }
 
@@ -166,19 +148,6 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                  ),
-                  onPressed: _testJWT,
-                  child: Text(
-                    "Test jwt",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
             ],
           ),
         ),
