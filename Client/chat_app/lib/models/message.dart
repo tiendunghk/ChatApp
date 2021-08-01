@@ -6,6 +6,7 @@ class Message {
   DateTime messageCreatedAt;
   String messengerUserAvatar;
   String messengerUserName;
+  bool isSender;
 
   Message(
       {required this.messageId,
@@ -14,7 +15,8 @@ class Message {
       required this.messageContent,
       required this.messageCreatedAt,
       required this.messengerUserAvatar,
-      required this.messengerUserName});
+      required this.messengerUserName,
+      required this.isSender});
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
       messageId: json['messageId'],
@@ -23,5 +25,6 @@ class Message {
       messageContent: json['messageContent'],
       messageCreatedAt: DateTime.parse(json['messageCreatedAt']),
       messengerUserAvatar: json['messengerUserAvatar'],
-      messengerUserName: json['messengerUserName']);
+      messengerUserName: json['messengerUserName'],
+      isSender: json['isSender']);
 }

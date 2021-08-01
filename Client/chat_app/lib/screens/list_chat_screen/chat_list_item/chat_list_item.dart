@@ -3,6 +3,7 @@ import 'package:chat_app/models/chat.dart';
 import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/screens/messages_screen/messages_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatListItem extends StatelessWidget {
@@ -13,7 +14,8 @@ class ChatListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(MessagesScreen.routeName,arguments: chat);
+        Navigator.of(context)
+            .pushNamed(MessagesScreen.routeName, arguments: chat);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(

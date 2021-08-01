@@ -1,9 +1,9 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/models/chart_message.dart';
+import 'package:chat_app/models/message.dart' as mes;
 import 'package:flutter/material.dart';
 
 class Message extends StatelessWidget {
-  final ChatMessage message;
+  final mes.Message message;
   const Message({Key? key, required this.message}) : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class Message extends StatelessWidget {
                     ? Color(0xFF2B5278)
                     : Color(0xFF2B5278).withOpacity(0.5),
                 borderRadius: BorderRadius.circular(20)),
-            child: Text(message.text))
+            child: Text(message.messageContent))
       ],
     );
   }

@@ -23,9 +23,8 @@ class UserProvider with ChangeNotifier {
           'http://10.0.3.2:9999/api/user/search?userId=$userId&keyword=$keyWord'),
       headers: {'Authorization': 'Bearer $token'},
     );
-    
+
     if (response.statusCode == 200) {
-      print('response: ${response.body}');
       var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
 
       var dataReponse = List<UserSearchResponse>.from(

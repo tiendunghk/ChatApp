@@ -1,9 +1,9 @@
-class PaginationWrap<T> {
+class PaginationWrap {
   int pageNumber;
   int skipRows;
   int pageSize;
   int totalRecords;
-  List<T> items;
+  List items;
 
   PaginationWrap(
       {required this.pageNumber,
@@ -17,5 +17,5 @@ class PaginationWrap<T> {
       skipRows: json['skipRows'],
       pageSize: json['pageSize'],
       totalRecords: json['totalRecords'],
-      items: json['items'] as List<T>);
+      items: json['items']);
 }

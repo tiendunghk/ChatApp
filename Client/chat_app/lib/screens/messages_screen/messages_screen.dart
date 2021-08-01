@@ -18,7 +18,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: MessagesBody(),
+      body: MessagesBody(groupId: _groupChat.groupChatId),
     );
   }
 

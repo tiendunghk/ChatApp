@@ -1,4 +1,5 @@
 import 'package:chat_app/providers/group_chat_provider.dart';
+import 'package:chat_app/providers/message_provider.dart';
 import 'package:chat_app/providers/user_provider.dart';
 import 'package:chat_app/screens/list_chat_screen/list_chat_screen.dart';
 import 'package:chat_app/screens/login/login.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MessageProvider(),
         )
       ],
       child: MaterialApp(
