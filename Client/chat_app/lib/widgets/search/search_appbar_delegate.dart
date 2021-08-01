@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:chat_app/models/api_response.dart';
+import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/providers/user_provider.dart';
 import 'package:chat_app/screens/messages_screen/messages_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchAppBarDelegate extends SearchDelegate<String> {
   var response = [];
@@ -27,6 +33,32 @@ class SearchAppBarDelegate extends SearchDelegate<String> {
   // Builds page to populate search results.
   @override
   Widget buildResults(BuildContext context) {
+    void goToChat(String userTwo) async {
+      SharedPreferences sharePrf = await SharedPreferences.getInstance();
+      final userId = sharePrf.getString('uid');
+      final token = sharePrf.getString('access_token');
+      http.Response response = await http.post(
+          Uri.parse('http://10.0.3.2:9999/api/groupchat'),
+          body: json.encode({
+            'userOneId': userId,
+            'userTwoId': userTwo,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          encoding: Encoding.getByName("utf-8"));
+
+      if (response.statusCode == 200) {
+        var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
+
+        var groupResponse = GroupChatModel.fromJson(jsonResponse.data);
+
+        Navigator.of(context)
+            .pushNamed(MessagesScreen.routeName, arguments: groupResponse);
+      }
+    }
+
     //this.query
     return FutureBuilder(
         future: Provider.of<UserProvider>(context, listen: false)
@@ -48,8 +80,7 @@ class SearchAppBarDelegate extends SearchDelegate<String> {
                         return InkWell(
                           onTap: () {
                             print('on tap');
-                            Navigator.of(context)
-                                .pushNamed(MessagesScreen.routeName);
+                            goToChat(userProvider.userSearch[index].userId);
                           },
                           child: Card(
                             child: ListTile(

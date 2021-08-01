@@ -49,8 +49,6 @@ class GroupChat with ChangeNotifier {
       headers: {'Authorization': 'Bearer $token'},
     );
 
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
 

@@ -48,7 +48,7 @@ namespace TeamApp.WebApi.Controllers
         {
             var res = await _repo.AddGroupChat(grChatReq);
 
-            var outPut = new ApiResponse<string>
+            var outPut = new ApiResponse<GroupChatResponse>
             {
                 Data = res == null ? null : res,
                 Succeeded = res == null ? false : true,

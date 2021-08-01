@@ -29,15 +29,26 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
             _chatHub = chatHub;
             _groupChatUserRepository = groupChatUserRepository;
         }
-        public async Task<string> AddGroupChat(GroupChatRequest grChatReq)
+        public async Task<GroupChatResponse> AddGroupChat(GroupChatRequest grChatReq)
         {
-            if (await CheckDoubleGroupChatExists(new Application.DTOs.GroupChat.CheckDoubleGroupChatExists
+            var check = await CheckDoubleGroupChatExists(new Application.DTOs.GroupChat.CheckDoubleGroupChatExists
             {
                 UserOneId = grChatReq.UserOneId,
                 UserTwoId = grChatReq.UserTwoId,
-            }))
+            });
+
+            var userTwo = await _dbContext.User.FindAsync(grChatReq.UserTwoId);
+
+            if (check.Exists)
             {
-                return "Exists group";
+                var groupChat = await _dbContext.GroupChat.FindAsync(check.GroupId);
+                return new GroupChatResponse
+                {
+                    GroupChatId = groupChat.GroupChatId,
+                    GroupChatName = userTwo.FullName,
+                    GroupChatUpdatedAt = DateTime.UtcNow,
+                    GroupAvatar = string.IsNullOrEmpty(userTwo.ImageUrl) ? $"https://ui-avatars.com/api/?name={userTwo.FullName}" : userTwo.ImageUrl,
+                };
             }
 
             else
@@ -63,12 +74,18 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
                     GroupChatUserGroupChatId = entity.GroupChatId,
                 });
 
-                return entity.GroupChatId;
+                return new GroupChatResponse
+                {
+                    GroupChatId = entity.GroupChatId,
+                    GroupChatName = userTwo.FullName,
+                    GroupChatUpdatedAt = DateTime.UtcNow,
+                    GroupAvatar = string.IsNullOrEmpty(userTwo.ImageUrl) ? $"https://ui-avatars.com/api/?name={userTwo.FullName}" : userTwo.ImageUrl,
+                };
             }
         }
 
 
-        public async Task<bool> CheckDoubleGroupChatExists(CheckDoubleGroupChatExists chatExists)
+        public async Task<CheckResponse> CheckDoubleGroupChatExists(CheckDoubleGroupChatExists chatExists)
         {
             var query = "SELECT g.group_chat_id " +
                         "FROM group_chat g " +
@@ -82,10 +99,18 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
 
             if (results.Count() == 1)
             {
-                return true;
+                return new CheckResponse
+                {
+                    Exists = true,
+                    GroupId = results[0],
+                };
             }
 
-            return false;
+            return new CheckResponse
+            {
+                Exists = false,
+                GroupId = null,
+            };
         }
 
         public async Task<List<GroupChatResponse>> GetAllByUserId(string userId)

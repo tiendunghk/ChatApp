@@ -89,8 +89,6 @@ class _LoginState extends State<Login> {
         headers: {'Content-Type': 'application/json'},
         encoding: Encoding.getByName("utf-8"));
 
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
 

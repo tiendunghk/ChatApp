@@ -1,4 +1,3 @@
-import 'package:chat_app/models/chart_message.dart';
 import 'package:chat_app/providers/message_provider.dart';
 import 'package:chat_app/screens/messages_screen/chat_input/chat_input.dart';
 import 'package:chat_app/screens/messages_screen/message.dart/message.dart';
@@ -15,13 +14,37 @@ class MessagesBody extends StatefulWidget {
 
 class _MessagesBodyState extends State<MessagesBody> {
   var init = false;
+  var _scrollController = ScrollController();
   @override
   void didChangeDependencies() {
     if (!init) {
-      Provider.of<MessageProvider>(context).getMessages(widget.groupId, 0);
+      Provider.of<MessageProvider>(context).getMessages(widget.groupId, true);
       init = true;
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        if (_scrollController.position.pixels == 0) {
+          print('reach top');
+          Provider.of<MessageProvider>(context, listen: false)
+              .getMessages(widget.groupId, false);
+        } else {
+          // You're at the bottom.
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -36,6 +59,7 @@ class _MessagesBodyState extends State<MessagesBody> {
                 child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: ListView.builder(
+                        controller: _scrollController,
                         itemBuilder: (_, index) {
                           return Message(message: messages[index]);
                         },

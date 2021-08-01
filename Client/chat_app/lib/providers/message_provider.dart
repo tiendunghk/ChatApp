@@ -14,12 +14,13 @@ class MessageProvider with ChangeNotifier {
   List<Message> _messages = [];
   List<Message> get messages => _messages;
 
-  Future<void> getMessages(String groupId, int skipItems) async {
+  Future<void> getMessages(String groupId, bool reload) async {
     _currentGroup = groupId;
     SharedPreferences sharePrf = await SharedPreferences.getInstance();
     final token = sharePrf.getString('access_token');
     final userId = sharePrf.getString('uid');
 
+    var skipItems = reload ? 0 : _messages.length;
     http.Response response = await http.get(
       Uri.parse(
           'http://10.0.3.2:9999/api/message?groupId=$groupId&userId=$userId&pageSize=12&skipItems=$skipItems'),
@@ -34,7 +35,7 @@ class MessageProvider with ChangeNotifier {
       var messagesData = List<Message>.from(
           pagingWrapItems.map((model) => Message.fromJson(model)));
 
-      if (skipItems == 0) {
+      if (reload) {
         _messages = messagesData;
       } else {
         var _cloneMessage = [..._messages];
