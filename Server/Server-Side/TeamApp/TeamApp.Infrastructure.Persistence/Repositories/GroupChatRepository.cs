@@ -74,6 +74,8 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
                     GroupChatUserGroupChatId = entity.GroupChatId,
                 });
 
+                await PushNoti(entity.GroupChatId, grChatReq);
+
                 return new GroupChatResponse
                 {
                     GroupChatId = entity.GroupChatId,
@@ -84,6 +86,39 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
             }
         }
 
+        async Task PushNoti(string groupId, GroupChatRequest groupChatRequest)
+        {
+            var groupChat = await _dbContext.GroupChat.FindAsync(groupId);
+            var userOne = await _dbContext.User.FindAsync(groupChatRequest.UserOneId);
+            var userTwo = await _dbContext.User.FindAsync(groupChatRequest.UserTwoId);
+
+            var payloadUser1 = new GroupChatResponse
+            {
+                GroupChatId = groupId,
+                GroupChatName = userTwo.FullName,
+                GroupChatUpdatedAt = groupChat.GroupChatCreatedAt.FormatTime(),
+                GroupAvatar = string.IsNullOrEmpty(userTwo.ImageUrl) ? $"https://ui-avatars.com/api/?name={userTwo.FullName}" : userTwo.ImageUrl,
+            };
+
+            var payloadUser2 = new GroupChatResponse
+            {
+                GroupChatId = groupId,
+                GroupChatName = userOne.FullName,
+                GroupChatUpdatedAt = groupChat.GroupChatCreatedAt.FormatTime(),
+                GroupAvatar = string.IsNullOrEmpty(userOne.ImageUrl) ? $"https://ui-avatars.com/api/?name={userOne.FullName}" : userOne.ImageUrl,
+            };
+
+            var userOneConnections = await (from u in _dbContext.UserConnection.AsNoTracking()
+                                            where u.UserId == groupChatRequest.UserOneId
+                                            select u.ConnectionId).ToListAsync();
+
+            var userTwoConnections = await (from u in _dbContext.UserConnection.AsNoTracking()
+                                            where u.UserId == groupChatRequest.UserTwoId
+                                            select u.ConnectionId).ToListAsync();
+
+            await _chatHub.Clients.Clients(userOneConnections).NewGroupChat(payloadUser1);
+            await _chatHub.Clients.Clients(userTwoConnections).NewGroupChat(payloadUser2);
+        }
 
         public async Task<CheckResponse> CheckDoubleGroupChatExists(CheckDoubleGroupChatExists chatExists)
         {
