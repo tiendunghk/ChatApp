@@ -16,9 +16,11 @@ class _MessagesBodyState extends State<MessagesBody> {
   var init = false;
   var _scrollController = ScrollController();
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (!init) {
-      Provider.of<MessageProvider>(context).getMessages(widget.groupId, true);
+      await Provider.of<MessageProvider>(context)
+          .getMessages(widget.groupId, true);
+      scrollBottom();
       init = true;
     }
     super.didChangeDependencies();
@@ -45,6 +47,14 @@ class _MessagesBodyState extends State<MessagesBody> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+  }
+
+  void scrollBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
