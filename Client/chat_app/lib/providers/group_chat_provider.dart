@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:flutter/foundation.dart';
@@ -32,7 +33,7 @@ class GroupChatModel {
   }
 }
 
-class GroupChat with ChangeNotifier {
+class GroupChatProvider with ChangeNotifier {
   List<GroupChatModel> _items = [];
 
   List<GroupChatModel> get items {
@@ -45,7 +46,7 @@ class GroupChat with ChangeNotifier {
     final token = sharePrf.getString('access_token');
 
     http.Response response = await http.get(
-      Uri.parse('http://10.0.3.2:9999/api/groupchat/user/$userId'),
+      Uri.parse('$baseURL/api/groupchat/user/$userId'),
       headers: {'Authorization': 'Bearer $token'},
     );
 

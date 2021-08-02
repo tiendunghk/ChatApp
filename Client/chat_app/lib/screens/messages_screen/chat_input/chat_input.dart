@@ -24,7 +24,7 @@ class ChatInput extends StatelessWidget {
         final userId = sharePrf.getString('uid');
         final token = sharePrf.getString('access_token');
         http.Response response = await http.post(
-            Uri.parse('http://10.0.3.2:9999/api/chat/messages'),
+            Uri.parse('$baseURL/api/chat/messages'),
             body: json.encode({
               'groupId': Provider.of<MessageProvider>(context, listen: false)
                   .currentGroup,

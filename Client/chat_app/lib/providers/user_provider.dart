@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/models/user_search_reponse.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +21,7 @@ class UserProvider with ChangeNotifier {
 
     http.Response response = await http.get(
       Uri.parse(
-          'http://10.0.3.2:9999/api/user/search?userId=$userId&keyword=$keyWord'),
+          '$baseURL/api/user/search?userId=$userId&keyword=$keyWord'),
       headers: {'Authorization': 'Bearer $token'},
     );
 

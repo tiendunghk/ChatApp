@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/providers/user_provider.dart';
@@ -38,7 +39,7 @@ class SearchAppBarDelegate extends SearchDelegate<String> {
       final userId = sharePrf.getString('uid');
       final token = sharePrf.getString('access_token');
       http.Response response = await http.post(
-          Uri.parse('http://10.0.3.2:9999/api/groupchat'),
+          Uri.parse('$baseURL/api/groupchat'),
           body: json.encode({
             'userOneId': userId,
             'userTwoId': userTwo,

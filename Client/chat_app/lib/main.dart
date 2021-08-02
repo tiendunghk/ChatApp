@@ -2,7 +2,7 @@ import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/providers/message_provider.dart';
 import 'package:chat_app/providers/user_provider.dart';
 import 'package:chat_app/screens/list_chat_screen/list_chat_screen.dart';
-import 'package:chat_app/screens/login/login.dart';
+import 'package:chat_app/screens/login_screen/login.dart';
 import 'package:chat_app/screens/messages_screen/messages_screen.dart';
 import 'package:chat_app/theme.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => GroupChat(),
+          create: (_) => GroupChatProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider(),

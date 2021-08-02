@@ -1,9 +1,7 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/models/chat.dart';
 import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/screens/messages_screen/messages_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatListItem extends StatelessWidget {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:chat_app/models/pagination_wrap.dart';
@@ -23,7 +24,7 @@ class MessageProvider with ChangeNotifier {
     var skipItems = reload ? 0 : _messages.length;
     http.Response response = await http.get(
       Uri.parse(
-          'http://10.0.3.2:9999/api/message?groupId=$groupId&userId=$userId&pageSize=12&skipItems=$skipItems'),
+          '$baseURL/api/message?groupId=$groupId&userId=$userId&pageSize=12&skipItems=$skipItems'),
       headers: {'Authorization': 'Bearer $token'},
     );
 

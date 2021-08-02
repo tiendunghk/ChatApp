@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/api_response.dart';
 import 'package:chat_app/models/user_response.dart';
 import 'package:chat_app/screens/list_chat_screen/list_chat_screen.dart';
@@ -81,7 +82,7 @@ class _LoginState extends State<Login> {
     print('call api');
 
     http.Response response = await http.post(
-        Uri.parse('http://10.0.3.2:9999/api/account/authenticate'),
+        Uri.parse('$baseURL/api/account/authenticate'),
         body: json.encode({
           'email': email,
           'fullName': name,

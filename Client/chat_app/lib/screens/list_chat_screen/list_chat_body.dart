@@ -1,4 +1,3 @@
-import 'package:chat_app/models/chat.dart';
 import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/screens/list_chat_screen/chat_list_item/chat_list_item.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +9,13 @@ class ListChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Provider.of<GroupChat>(context, listen: false).getGroupChat(),
+        future: Provider.of<GroupChatProvider>(context, listen: false).getGroupChat(),
         builder: (ctx, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : Consumer<GroupChat>(
+                : Consumer<GroupChatProvider>(
                     child: Center(
                       child: Text("No chat available!"),
                     ),
