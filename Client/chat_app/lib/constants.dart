@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const baseURL = 'http://10.0.3.2:9999';
+const baseURL = 'https://chat.ezteam.tech';
 const primaryColor = Color(0xFF0E1621);
 const secondaryColor = Color(0xFFFE9901);
 const contentColorDarkTheme = Color(0xFFF5FCF9);

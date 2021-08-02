@@ -81,25 +81,45 @@ class _LoginState extends State<Login> {
 
     print('call api');
 
-    http.Response response = await http.post(
-        Uri.parse('$baseURL/api/account/authenticate'),
-        body: json.encode({
-          'email': email,
-          'fullName': name,
-        }),
-        headers: {'Content-Type': 'application/json'},
-        encoding: Encoding.getByName("utf-8"));
+    try {
+      http.Response response =
+          await http.post(Uri.parse('$baseURL/api/account/authenticate'),
+              body: json.encode({
+                'email': email,
+                'fullName': name,
+              }),
+              headers: {'Content-Type': 'application/json'},
+              encoding: Encoding.getByName("utf-8"));
 
-    if (response.statusCode == 200) {
-      var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
+      print('status code la: ${response.statusCode}');
 
-      var userResponse = UserResponse.fromJson(jsonResponse.data);
-      print(userResponse.id);
-      SharedPreferences sharePrf = await SharedPreferences.getInstance();
-      sharePrf.setString('uid', userResponse.id);
-      sharePrf.setString("access_token", userResponse.jwToken);
+      if (response.statusCode == 200) {
+        var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
 
-      Navigator.of(context).pushReplacementNamed(ListChatScreen.routeName);
+        var userResponse = UserResponse.fromJson(jsonResponse.data);
+        print(userResponse.id);
+        SharedPreferences sharePrf = await SharedPreferences.getInstance();
+        sharePrf.setString('uid', userResponse.id);
+        sharePrf.setString("access_token", userResponse.jwToken);
+
+        Navigator.of(context).pushReplacementNamed(ListChatScreen.routeName);
+      }
+    } on Exception catch (ex) {
+      showDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: Text('Lỗi'),
+              content: Text(ex.toString()),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: Text('OK'))
+              ],
+            );
+          });
     }
   }
 

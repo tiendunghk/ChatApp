@@ -18,9 +18,12 @@ class _MessagesBodyState extends State<MessagesBody> {
   @override
   void didChangeDependencies() async {
     if (!init) {
-      await Provider.of<MessageProvider>(context)
+      await Provider.of<MessageProvider>(context, listen: false)
           .getMessages(widget.groupId, true);
-      scrollBottom();
+
+      final mes =
+          Provider.of<MessageProvider>(context, listen: false).messages.length;
+      if (mes != 0) scrollBottom();
       init = true;
     }
     super.didChangeDependencies();
