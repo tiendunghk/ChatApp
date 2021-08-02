@@ -105,10 +105,6 @@ class SearchAppBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return response.length <= 0
-        ? Center(
-            child: Text('No data'),
-          )
-        : Container();
+    return Container();
   }
 }

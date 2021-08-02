@@ -1,18 +1,11 @@
-import 'dart:convert';
-
-import 'package:chat_app/models/api_response.dart';
-import 'package:chat_app/models/pagination_wrap.dart';
+import 'package:chat_app/models/message.dart' as mes;
 import 'package:chat_app/providers/group_chat_provider.dart';
 import 'package:chat_app/providers/message_provider.dart';
-import 'package:chat_app/screens/messages_screen/message.dart/message.dart';
-import 'package:http/http.dart' as http;
 import 'package:chat_app/screens/list_chat_screen/list_chat_body.dart';
-import 'package:chat_app/signalr/chatHub.dart';
 import 'package:chat_app/widgets/search/search_appbar_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:chat_app/models/message.dart' as mes;
 import 'package:signalr_core/signalr_core.dart';
 
 class ListChatScreen extends StatefulWidget {
@@ -45,21 +38,11 @@ class _ListChatScreenState extends State<ListChatScreen> {
   void initState() {
     super.initState();
     print('intit');
+    connectSignalR();
     _searchDelegate = SearchAppBarDelegate();
   }
 
-  @override
-  void didChangeDependencies() {
-    if (!init) {
-      connectSignalR();
-      init = true;
-    }
-    super.didChangeDependencies();
-  }
-
   void connectSignalR() async {
-    //ChatHub().connect();
-
     SharedPreferences sharePrf = await SharedPreferences.getInstance();
     final uid = sharePrf.getString('uid');
 
@@ -79,13 +62,25 @@ class _ListChatScreenState extends State<ListChatScreen> {
             messageCreatedAt: DateTime.parse(newMessage[0]['timeSend']),
             isSender: newMessage[0]['userId'] == uid);
 
-        print('zzzzzzzzzzzzzzzzzzzzzzz: ${messageObj.messageCreatedAt}');
-
         Provider.of<MessageProvider>(context, listen: false)
             .newMessage(messageObj);
 
+        Provider.of<GroupChat>(context, listen: false).newMessage(messageObj);
+      });
+
+      connection.on("NewGroupChat", (newGroupChat) {
+        print('co group chat moi $newGroupChat');
+
+        final groupChatObj = GroupChatModel(
+            groupChatId: newGroupChat![0]['groupChatId'],
+            groupChatName: newGroupChat[0]['groupChatName'],
+            groupChatUpdatedAt:
+                DateTime.parse(newGroupChat[0]['groupChatUpdatedAt']),
+            groupAvatar: newGroupChat[0]['groupAvatar'],
+            lastestMes: newGroupChat[0]['lastestMes']);
+
         Provider.of<GroupChat>(context, listen: false)
-            .newMessage(messageObj);
+            .newGroupChat(groupChatObj);
       });
     }
   }
@@ -98,40 +93,20 @@ class _ListChatScreenState extends State<ListChatScreen> {
     );
   }
 
-  void _testPaging() async {
-    SharedPreferences sharePrf = await SharedPreferences.getInstance();
-    final token = sharePrf.getString('access_token');
-
-    http.Response response = await http.get(
-      Uri.parse(
-          'http://10.0.3.2:9999/api/message?groupId=5a15e3e0-8b03-49e6-8b60-334cf32cd8dd&userId=acc1'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      var jsonResponse = ApiResponse.fromJson(jsonDecode(response.body));
-
-      var pagingWrapItems = PaginationWrap.fromJson(jsonResponse.data).items;
-
-      var messages = List<mes.Message>.from(
-          pagingWrapItems.map((model) => mes.Message.fromJson(model)));
-      print('chieu dai la : ${messages.length}');
-    }
-  }
-
   AppBar buildAppBar() {
     return AppBar(
       title: Text("Chats"),
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-            onPressed: () {
-              _testPaging();
-            },
-            icon: Icon(Icons.tab_sharp)),
-        IconButton(
-            onPressed: () {
-              //ChatHub().disconnect();
+            onPressed: () async {
+              SharedPreferences sharePrf =
+                  await SharedPreferences.getInstance();
+              connection.stop();
+
+              sharePrf.remove('uid');
+              sharePrf.remove("access_token");
+
               Navigator.of(context).pushReplacementNamed('/');
             },
             icon: Icon(Icons.logout)),
@@ -146,12 +121,10 @@ class _ListChatScreenState extends State<ListChatScreen> {
   }
 
   void _showSearchPage(
-      BuildContext context, SearchAppBarDelegate searchDelegate) async {
-    final String? selected = await showSearch<String>(
+      BuildContext context, SearchAppBarDelegate searchDelegate) {
+    showSearch<String>(
       context: context,
       delegate: searchDelegate,
     );
-
-    print(selected);
   }
 }

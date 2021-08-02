@@ -84,4 +84,9 @@ class GroupChat with ChangeNotifier {
     _items = cloneGrChat;
     notifyListeners();
   }
+
+  void newGroupChat(GroupChatModel groupChatModel) {
+    _items.insert(0, groupChatModel);
+    notifyListeners();
+  }
 }
