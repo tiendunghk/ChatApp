@@ -30,7 +30,7 @@ namespace TeamApp.Infrastructure.Persistence.Repositories
                 MessageUserId = msgReq.MessageUserId,
                 MessageGroupChatId = msgReq.MessageGroupChatId,
                 MessageContent = msgReq.MessageContent,
-                MessageCreatedAt = DateTime.UtcNow,
+                MessageCreatedAt = msgReq.MessageCreatedAt,
             };
 
             await _dbContext.Message.AddAsync(entity);
