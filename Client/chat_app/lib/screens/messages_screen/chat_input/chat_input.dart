@@ -9,8 +9,10 @@ import 'package:http/http.dart' as http;
 import '../../../constants.dart';
 
 class ChatInput extends StatelessWidget {
+  final Function scrollFunc;
   const ChatInput({
     Key? key,
+    required this.scrollFunc,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,10 @@ class ChatInput extends StatelessWidget {
               'Authorization': 'Bearer $token'
             },
             encoding: Encoding.getByName("utf-8"));
-        if (response.statusCode == 200) {}
+        if (response.statusCode == 200) {
+          await Future.delayed(Duration(seconds: 0));
+          scrollFunc();
+        }
       }
     }
 
@@ -61,13 +66,14 @@ class ChatInput extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding * 0.75,
+                  horizontal: defaultPadding * 0.4,
                 ),
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.05),
+                  color: Color(0xFF2B5278).withOpacity(0.5),
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: TextField(
@@ -82,18 +88,22 @@ class ChatInput extends StatelessWidget {
                         },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .color!
-                            .withOpacity(0.64),
+                    SizedBox(width: 20),
+                    Container(
+                      margin: EdgeInsets.only(left: 50),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.send,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .color!
+                              .withOpacity(0.64),
+                        ),
+                        onPressed: () {
+                          _submit();
+                        },
                       ),
-                      onPressed: () {
-                        _submit();
-                      },
                     ),
                   ],
                 ),

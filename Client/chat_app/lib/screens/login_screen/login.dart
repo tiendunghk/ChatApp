@@ -128,47 +128,49 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Welcome to Simple Chat'),
+        title: Text('Chat app'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Center(
-          child: Column(
-            children: [
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  hintText: "Type your email",
-                  filled: true,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: "Type your name",
-                  filled: true,
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                  ),
-                  onPressed: _login,
-                  child: Text(
-                    "Login",
-                    style: TextStyle(color: Colors.white),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    hintText: "Type your email",
+                    filled: true,
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 30,
+                ),
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: "Type your name",
+                    filled: true,
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                    ),
+                    onPressed: _login,
+                    child: Text(
+                      "Login",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -77,7 +77,10 @@ class _MessagesBodyState extends State<MessagesBody> {
                           return Message(message: messages[index]);
                         },
                         itemCount: messages.length))),
-        ChatInput(),
+        SizedBox(
+          height: 10,
+        ),
+        ChatInput(scrollFunc: scrollBottom),
       ],
     );
   }

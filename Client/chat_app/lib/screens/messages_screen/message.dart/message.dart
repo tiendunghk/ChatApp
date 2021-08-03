@@ -9,38 +9,41 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment:
           message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Container(
-            margin: EdgeInsets.only(top: defaultPadding),
-            padding: EdgeInsets.symmetric(
-              horizontal: defaultPadding * 0.75,
-              vertical: defaultPadding / 3,
+          margin: EdgeInsets.only(top: defaultPadding),
+          padding: EdgeInsets.symmetric(
+              horizontal: defaultPadding * 0.4, vertical: defaultPadding / 4),
+          decoration: BoxDecoration(
+              color: message.isSender
+                  ? Color(0xFF2B5278)
+                  : Color(0xFF2B5278).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(15)),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: size.width * 0.8,
             ),
-            decoration: BoxDecoration(
-                color: message.isSender
-                    ? Color(0xFF2B5278)
-                    : Color(0xFF2B5278).withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(message.messageContent),
                 SizedBox(
-                  width: 10,
+                  height: 5,
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  child: Text(
-                    DateFormat('hh:MM a').format(message.messageCreatedAt),
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.7), fontSize: 10),
-                  ),
-                ),
+                Text(
+                  DateFormat('hh:MM a')
+                      .format(message.messageCreatedAt.toLocal()),
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.7), fontSize: 10),
+                )
               ],
-            ))
+            ),
+          ),
+        )
       ],
     );
   }
